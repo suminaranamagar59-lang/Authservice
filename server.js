@@ -1,136 +1,93 @@
-/**
- * Secure User Authentication System
- * Main Server File
- * 
- * This is the entry point of the application
- * It sets up Express server, connects to MongoDB, and defines routes
- */
+// server.js
+// Main entry point for the Express server
 
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const path = require('path');
-const authRoutes = require('./routes/auth');
+require("dotenv").config(); // Load environment variables from .env file
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const path = require("path");
+const rateLimit = require("express-rate-limit");
+
+const authRoutes = require("./routes/auth");
 
 const app = express();
-
-// ======================
-// MIDDLEWARE CONFIGURATION
-// ======================
-
-// Enable CORS (Cross-Origin Resource Sharing)
-app.use(cors());
-
-// Parse JSON request bodies
-app.use(express.json());
-
-// Parse URL-encoded request bodies
-app.use(express.urlencoded({ extended: true }));
-
-// Serve static files (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'views')));
-
-// ======================
-// DATABASE CONNECTION
-// ======================
-
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log('✅ MongoDB connected successfully');
-})
-.catch((error) => {
-  console.error('❌ MongoDB connection error:', error);
-  process.exit(1);
-});
-
-// ======================
-// API ROUTES
-// ======================
-
-// Authentication routes
-app.use('/api/auth', authRoutes);
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
-});
-
-// ======================
-// SERVE HTML PAGES
-// ======================
-
-// Home/Login page
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'login.html'));
-});
-
-// Registration page
-app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'register.html'));
-});
-
-// Forgot password page
-app.get('/forgot-password', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'forgot-password.html'));
-});
-
-// Dashboard page (protected)
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
-});
-
-// ======================
-// ERROR HANDLING
-// ======================
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
-  });
-});
-
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error('Server error:', err);
-  res.status(500).json({
-    success: false,
-    message: 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined
-  });
-});
-
-// ======================
-// START SERVER
-// ======================
-
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`
-╔════════════════════════════════════════════╗
-║   🔐 Secure Auth System Server Running   ║
-║                                            ║
-║   Port: ${PORT}                            ║
-║   Environment: ${process.env.NODE_ENV || 'development'}               ║
-║   URL: http://localhost:${PORT}            ║
-╚════════════════════════════════════════════╝
-  `);
+// ─────────────────────────────────────────────
+// MIDDLEWARE SETUP
+// ─────────────────────────────────────────────
+
+// Parse incoming JSON requests
+app.use(express.json());
+
+// Enable CORS (allows frontend to communicate with backend)
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "*",
+  methods: ["GET", "POST"],
+}));
+
+// Rate limiting: prevents brute-force attacks on auth endpoints
+// Max 20 requests per 15 minutes per IP
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { message: "Too many attempts. Please wait 15 minutes and try again." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use("/api/auth", authLimiter);
+
+// Serve static frontend files from the "public" folder
+app.use(express.static(path.join(__dirname, "public")));
+
+// ─────────────────────────────────────────────
+// API ROUTES
+// ─────────────────────────────────────────────
+app.use("/api/auth", authRoutes);
+
+// ─────────────────────────────────────────────
+// PAGE ROUTES — serve HTML pages
+// ─────────────────────────────────────────────
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Handle graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received. Shutting down gracefully...');
-  mongoose.connection.close();
-  process.exit(0);
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "pages", "login.html"));
 });
+
+app.get("/signup", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "pages", "signup.html"));
+});
+
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "pages", "dashboard.html"));
+});
+
+app.get("/verify-email", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "pages", "verify-email.html"));
+});
+
+app.get("/forgot-password", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "pages", "forgot-password.html"));
+});
+
+app.get("/reset-password", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "pages", "reset-password.html"));
+});
+
+// ─────────────────────────────────────────────
+// CONNECT TO MONGODB AND START SERVER
+// ─────────────────────────────────────────────
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("✅ Connected to MongoDB successfully");
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection failed:", err.message);
+    process.exit(1);
+  });
