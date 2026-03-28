@@ -13,6 +13,9 @@ const authRoutes = require("./routes/auth");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Required for Render/Heroku — they sit behind a reverse proxy
+app.set("trust proxy", 1);
+
 // ─────────────────────────────────────────────
 // MIDDLEWARE SETUP
 // ─────────────────────────────────────────────
