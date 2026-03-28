@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureAuth — Home</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .home-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .home-logo {
+      width: 72px; height: 72px;
+      background: rgba(224,201,127,0.15);
+      border: 2px solid rgba(224,201,127,0.3);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .home-logo svg { width: 36px; height: 36px; fill: #e0c97f; }
+    .home-wrapper h1 {
+      font-size: 42px; font-weight: 700;
+      color: #fff; margin-bottom: 10px;
+    }
+    .home-wrapper h1 span { color: #e0c97f; }
+    .home-wrapper p {
+      color: rgba(255,255,255,0.6);
+      font-size: 16px; max-width: 400px;
+      margin: 0 auto 36px; line-height: 1.7;
+    }
+    .home-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .home-btns a {
+      padding: 13px 32px; border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none; transition: all 0.25s;
+    }
+    .btn-login {
+      background: #e0c97f; color: #1a1a2e;
+    }
+    .btn-login:hover { background: #c9b264; transform: translateY(-2px); }
+    .btn-signup {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-signup:hover { background: rgba(255,255,255,0.18); }
+    .features {
+      display: flex; gap: 12px; margin-top: 48px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .feature-pill {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      padding: 7px 16px; border-radius: 99px;
+      font-size: 12px; display: flex; align-items: center; gap: 6px;
+    }
+    .feature-pill span { font-size: 14px; }
+    .footer-note {
+      margin-top: 40px; color: rgba(255,255,255,0.3);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="home-wrapper">
+    <div class="home-logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+      </svg>
+    </div>
+    <h1>Secure<span>Auth</span></h1>
+    <p>A complete authentication system with email verification, password reset, and JWT-secured dashboard.</p>
+    <div class="home-btns">
+      <a href="/login" class="btn-login">Login</a>
+      <a href="/signup" class="btn-signup">Create Account</a>
+    </div>
+    <div class="features">
+      <div class="feature-pill"><span>🔒</span> bcrypt Hashing</div>
+      <div class="feature-pill"><span>📧</span> Email Verification</div>
+      <div class="feature-pill"><span>🤖</span> reCAPTCHA</div>
+      <div class="feature-pill"><span>🔑</span> JWT Auth</div>
+      <div class="feature-pill"><span>📱</span> Responsive</div>
+    </div>
+    <p class="footer-note">College Project — Secure User Authentication System</p>
+  </div>
+</body>
+</html>
