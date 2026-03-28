@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureAuth — Verify Email</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card" style="text-align:center;">
+
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+          </svg>
+        </div>
+        <h1>Email Verification</h1>
+      </div>
+
+      <!-- Loading state -->
+      <div id="loadingState">
+        <div style="display:flex; justify-content:center; margin:24px 0;">
+          <div class="loading-spinner" style="width:36px; height:36px;"></div>
+        </div>
+        <p style="color:#7f8c8d; font-size:14px;">Verifying your email address...</p>
+      </div>
+
+      <!-- Result state (hidden initially) -->
+      <div id="resultState" style="display:none;">
+        <div id="resultIcon" style="font-size:52px; margin: 12px 0 16px;"></div>
+        <div class="alert" id="alertBox" style="display:flex; text-align:left;"></div>
+        <div style="margin-top:24px;">
+          <a href="/login" class="btn btn-primary" style="text-decoration:none;">Go to Login</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/js/utils.js"></script>
+  <script>
+    // Extract token from URL query string: /verify-email?token=abc123
+    async function verifyEmail() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+
+      const loadingState = document.getElementById("loadingState");
+      const resultState = document.getElementById("resultState");
+      const alertBox = document.getElementById("alertBox");
+      const resultIcon = document.getElementById("resultIcon");
+
+      if (!token) {
+        loadingState.style.display = "none";
+        resultState.style.display = "block";
+        resultIcon.textContent = "❌";
+        showAlert(alertBox, "No verification token found. Please use the link from your email.", "error");
+        return;
+      }
+
+      try {
+        // Call backend to verify the email token
+        const result = await apiRequest(`/verify-email?token=${token}`, "GET");
+
+        loadingState.style.display = "none";
+        resultState.style.display = "block";
+
+        if (result.ok) {
+          resultIcon.textContent = "✅";
+          showAlert(alertBox, result.data.message, "success");
+        } else {
+          resultIcon.textContent = "❌";
+          showAlert(alertBox, result.data.message || "Verification failed.", "error");
+        }
+      } catch (err) {
+        loadingState.style.display = "none";
+        resultState.style.display = "block";
+        resultIcon.textContent = "⚠️";
+        showAlert(alertBox, "Network error. Please try again.", "error");
+      }
+    }
+
+    verifyEmail();
+  </script>
+</body>
+</html>
