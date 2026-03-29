@@ -1,0 +1,41 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="50%" style="stop-color:#16213e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Decorative circles -->
+  <circle cx="1050" cy="100" r="200" fill="rgba(224,201,127,0.05)"/>
+  <circle cx="150" cy="530" r="150" fill="rgba(224,201,127,0.04)"/>
+  <!-- Shield icon -->
+  <g transform="translate(520, 140)">
+    <path d="M80 10L10 40v50c0 46 29 89 70 100 41-11 70-54 70-100V40L80 10z" fill="#e0c97f" opacity="0.9"/>
+    <path d="M80 10L10 40v50c0 46 29 89 70 100 41-11 70-54 70-100V40L80 10z" fill="none" stroke="#e0c97f" stroke-width="3"/>
+    <path d="M55 80l18 18 32-32" stroke="#1a1a2e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <!-- Title -->
+  <text x="600" y="360" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">SecureAuth</text>
+  <!-- Subtitle -->
+  <text x="600" y="420" font-family="Arial, sans-serif" font-size="28" fill="rgba(255,255,255,0.6)" text-anchor="middle">Secure User Authentication System</text>
+  <!-- Feature pills -->
+  <g transform="translate(250, 470)">
+    <rect width="160" height="40" rx="20" fill="rgba(255,255,255,0.1)"/>
+    <text x="80" y="26" font-family="Arial" font-size="16" fill="rgba(255,255,255,0.8)" text-anchor="middle">🔒 bcrypt</text>
+  </g>
+  <g transform="translate(430, 470)">
+    <rect width="160" height="40" rx="20" fill="rgba(255,255,255,0.1)"/>
+    <text x="80" y="26" font-family="Arial" font-size="16" fill="rgba(255,255,255,0.8)" text-anchor="middle">📧 Email Verify</text>
+  </g>
+  <g transform="translate(610, 470)">
+    <rect width="140" height="40" rx="20" fill="rgba(255,255,255,0.1)"/>
+    <text x="70" y="26" font-family="Arial" font-size="16" fill="rgba(255,255,255,0.8)" text-anchor="middle">🔑 JWT Auth</text>
+  </g>
+  <g transform="translate(770, 470)">
+    <rect width="170" height="40" rx="20" fill="rgba(255,255,255,0.1)"/>
+    <text x="85" y="26" font-family="Arial" font-size="16" fill="rgba(255,255,255,0.8)" text-anchor="middle">🤖 reCAPTCHA</text>
+  </g>
+</svg>
